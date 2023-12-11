@@ -1,7 +1,15 @@
 import { Grid } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { getRooms } from "../api";
 import Room from "../components/Room";
+import RoomSkeleton from "../components/RoomSkeleton";
+import { IRoomList } from "../types";
 
 export default function Home() {
+  const { isLoading, data } = useQuery<IRoomList[]>({
+    queryKey: ["rooms"],
+    queryFn: getRooms,
+  });
   return (
     <Grid
       mt={10}
@@ -19,36 +27,33 @@ export default function Home() {
         "2xl": "repeat(5, 1fr)",
       }}
     >
-      {[
-        1,
-        2,
-        3,
-        4,
-        56,
-        7,
-        7,
-        7,
-        6,
-        6,
-        6,
-        6,
-        66,
-        6,
-        6,
-        6,
-        6,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-      ].map((index) => (
-        <Room key={index} />
+      {isLoading ? (
+        <>
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+        </>
+      ) : null}
+      {data?.map((room) => (
+        <Room
+          key={room.pk}
+          pk={room.pk}
+          imageUrl={
+            room.photos[0]?.file ?? `https://source.unsplash.com/random/450x450`
+          }
+          name={room.name}
+          rating={room.rating}
+          city={room.city}
+          country={room.country}
+          price={room.price}
+        />
       ))}
     </Grid>
   );
