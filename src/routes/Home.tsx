@@ -6,10 +6,7 @@ import RoomSkeleton from "../components/RoomSkeleton";
 import { IRoomList } from "../types";
 
 export default function Home() {
-  const { isLoading, data } = useQuery<IRoomList[]>({
-    queryKey: ["rooms"],
-    queryFn: getRooms,
-  });
+  const { isLoading, data } = useQuery<IRoomList[]>(["rooms"], getRooms);
   return (
     <Grid
       mt={10}
