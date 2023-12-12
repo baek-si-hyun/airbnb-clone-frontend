@@ -45,6 +45,7 @@ export default function Home() {
           imageUrl={
             room.photos[0]?.file ?? `https://source.unsplash.com/random/450x450`
           }
+          isOwner={room.is_owner}
           name={room.name}
           rating={room.rating}
           city={room.city}
