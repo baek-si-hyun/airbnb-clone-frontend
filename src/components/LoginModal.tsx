@@ -51,8 +51,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       });
       onClose();
       queryClient.refetchQueries(["me"]);
-    },
-    onError: () => {
       reset();
     },
   });
