@@ -1,6 +1,8 @@
 import Cookie from "js-cookie";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
+import { formatDate } from "./lib/utils";
+
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8000/api/v1/",
   withCredentials: true,
@@ -108,12 +110,10 @@ export const getUploadURL = () =>
       },
     })
     .then((response) => response.data);
-
 export interface IUploadImageVarialbes {
   file: FileList;
   uploadURL: string;
 }
-
 export const uploadImage = ({ file, uploadURL }: IUploadImageVarialbes) => {
   const form = new FormData();
   form.append("file", file[0]);
@@ -130,7 +130,6 @@ export interface ICreatePhotoVariables {
   file: string;
   roomPk: string;
 }
-
 export const createPhoto = ({
   description,
   file,
@@ -147,3 +146,19 @@ export const createPhoto = ({
       }
     )
     .then((response) => response.data);
+type CheckBookingQueryKey = [string, string?, Date[]?];
+export const checkBooking = ({
+  queryKey,
+}: QueryFunctionContext<CheckBookingQueryKey>) => {
+  const [_, roomPk, dates] = queryKey;
+  if (dates) {
+    const [firstDate, secondDate] = dates;
+    const checkIn = formatDate(firstDate);
+    const checkOut = formatDate(secondDate);
+    return instance
+      .get(
+        `rooms/${roomPk}/bookings/check?check_in=${checkIn}&check_out=${checkOut}`
+      )
+      .then((response) => response.data);
+  }
+};
